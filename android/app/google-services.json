@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "213534633286",
+    "project_id": "flutternotes-keris-projects",
+    "storage_bucket": "flutternotes-keris-projects.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213534633286:android:910e84486892a68cca0947",
+        "android_client_info": {
+          "package_name": "net.kerisproject.flutternotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213534633286-e18o22m02scmsdc2tpk17nd6a7ck1hol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzeH_Wgg_uR2SMuxefw9d4AyGDgzfAabk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213534633286-e18o22m02scmsdc2tpk17nd6a7ck1hol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
