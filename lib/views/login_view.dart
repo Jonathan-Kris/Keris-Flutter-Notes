@@ -34,7 +34,7 @@ class LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text("Keris Flutter Notes - Login"),
+          title: const Text("Login"),
           backgroundColor: CustomColorPalette.appBarBackgroundColor),
       body: Center(
         child: Padding(
@@ -73,6 +73,10 @@ class LoginViewState extends State<LoginView> {
                             final userCredential = await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: email, password: password);
+
+                            print(userCredential);
+
+                            showSuccessDialog(context: context, text: "Welcome ${email}");
                           } on FirebaseAuthException catch (e) {
                             print(e);
                             if(e.code == "user-not-found"){

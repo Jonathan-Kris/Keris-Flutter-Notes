@@ -34,7 +34,7 @@ class _RegisterViewState extends State<RegisterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text("Keris Flutter Notes - Register"),
+          title: const Text("Register"),
           backgroundColor: CustomColorPalette.appBarBackgroundColor),
       body: Center(
         child: Padding(
