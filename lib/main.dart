@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutternotes/views/login_view.dart';
+import 'package:flutternotes/views/register_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
