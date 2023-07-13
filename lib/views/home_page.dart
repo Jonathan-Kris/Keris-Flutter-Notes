@@ -3,7 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutternotes/firebase_options.dart';
 import 'package:flutternotes/helpers/colors.dart';
-import 'package:flutternotes/widgets/custom_dialog.dart';
+import 'package:flutternotes/views/login_view.dart';
+import 'package:flutternotes/views/verify_email_view.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -25,17 +26,27 @@ class HomePage extends StatelessWidget {
               switch (snapshot.connectionState){
                 case ConnectionState.done:
                   User? user = FirebaseAuth.instance.currentUser;
-                  final _isUserVerified = user?.emailVerified ?? false;
+                  final isUserVerified = user?.emailVerified ?? false;
                   print(user);
 
-                  if (_isUserVerified) {
-                    print("Your email is verified");
-                  }
-                  else {
-                    print("You need to verify your email first");
-                  }
-                  
-                  return const Text("Firebase Initialization Done");
+                  if (isUserVerified) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.check_box_rounded, color: Colors.green.shade300, size: 70.0,),
+                          const Text("Firebase Initialization Done"),
+                          const Text("User is verified")
+                        ],
+                      );
+
+                      //return const LoginView();
+                    } else {
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) => const VerifyEmailView()));
+
+                      return const VerifyEmailView();
+                    }
+
                 default:
                  return const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
