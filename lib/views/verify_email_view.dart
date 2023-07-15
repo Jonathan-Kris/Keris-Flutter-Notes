@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutternotes/helpers/colors.dart';
+import 'dart:developer' as devtools show log;
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -23,8 +24,16 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           TextButton(
               onPressed: () async {
                 User? user = FirebaseAuth.instance.currentUser;
-                print(user);
-                await user?.sendEmailVerification();
+                devtools.log(user.toString());
+                
+                final isUserVerified = user?.emailVerified ?? false;
+
+                if(!isUserVerified){
+                  await user?.sendEmailVerification();
+                }
+                
+                Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+
               },
               child: const Text("Send Email Verification"))
         ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutternotes/firebase_options.dart';
 import 'package:flutternotes/helpers/colors.dart';
 import 'package:flutternotes/widgets/custom_dialog.dart';
+import 'dart:developer' as devtools show log;
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -73,9 +74,9 @@ class _RegisterViewState extends State<RegisterView> {
                               final userCredential = await FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
                                       email: email, password: password);
-                              print(userCredential);
+                              devtools.log(userCredential.toString());
                             } on FirebaseAuthException catch (e) {
-                              print(e);
+                              devtools.log(e.toString());
                               if (e.code == "weak-password") {
                                 showErrorDialog(
                                     context: context,
@@ -91,7 +92,7 @@ class _RegisterViewState extends State<RegisterView> {
                                     context: context, text: "Invalid Email");
                               }
                             } catch (e) {
-                              print(e);
+                              devtools.log(e.toString());
                               showErrorDialog(context: context);
                             }
                           },

@@ -4,6 +4,7 @@ import 'package:flutternotes/firebase_options.dart';
 import 'package:flutternotes/helpers/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutternotes/widgets/custom_dialog.dart';
+import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -73,12 +74,21 @@ class LoginViewState extends State<LoginView> {
                               final userCredential = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
                                       email: email, password: password);
+                              devtools.log(userCredential.toString());
+
+                              final isUserVerified = userCredential.user?.emailVerified ?? false;
     
-                              print(userCredential);
-    
-                              showSuccessDialog(context: context, text: "Welcome ${email}");
+                              //showSuccessDialog(context: context, text: "Welcome ${email}");
+                              if (isUserVerified) {
+                                // Main UI go here
+                                Navigator.of(context).pushNamedAndRemoveUntil("/notes", (route) => false);
+                              } else {
+                                Navigator.of(context).pushNamedAndRemoveUntil("/verify-email", (route) => false);
+                              }
+
+                              
                             } on FirebaseAuthException catch (e) {
-                              print(e);
+                              devtools.log(e.toString());
                               if(e.code == "user-not-found"){
                                 showErrorDialog(context: context, text: "User not found!");
                               }
@@ -89,7 +99,7 @@ class LoginViewState extends State<LoginView> {
                                 showErrorDialog(context: context, text: "This account has been temporarily disabled due to many failed login attempts. Try again later");
                               }
                             } catch (e){
-                              print(e);
+                              devtools.log(e.toString());
                                 showErrorDialog(context: context);
                             }
                 
