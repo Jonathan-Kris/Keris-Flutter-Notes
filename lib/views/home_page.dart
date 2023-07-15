@@ -11,14 +11,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text("Home Page"),
-          backgroundColor: CustomColorPalette.appBarBackgroundColor),
-          body: Center(
+    return     Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: FutureBuilder(
+          child: 
+          FutureBuilder(
             future: Firebase.initializeApp(
                 options: DefaultFirebaseOptions.currentPlatform,
               ),
@@ -30,22 +27,10 @@ class HomePage extends StatelessWidget {
                   print(user);
 
                   if (isUserVerified) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.check_box_rounded, color: Colors.green.shade300, size: 70.0,),
-                          const Text("Firebase Initialization Done"),
-                          const Text("User is verified")
-                        ],
-                      );
-
-                      //return const LoginView();
-                    } else {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => const VerifyEmailView()));
-
-                      return const VerifyEmailView();
-                    }
+                    return const LoginView();
+                  } else {
+                    return const VerifyEmailView();
+                  }
 
                 default:
                  return const Column(
@@ -58,7 +43,6 @@ class HomePage extends StatelessWidget {
             }
           ),
         ),
-      ),
-    );
+      );
   }
 }

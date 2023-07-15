@@ -40,35 +40,35 @@ class _RegisterViewState extends State<RegisterView> {
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: FutureBuilder(
-            future: Firebase.initializeApp(
+              future: Firebase.initializeApp(
                 options: DefaultFirebaseOptions.currentPlatform,
               ),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState){
-                case ConnectionState.done:
-                  return Column(
-                    children: [
-                      TextField(
-                        controller: _email,
-                        autocorrect: false,
-                        enableSuggestions: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(hintText: "Enter your email"),
-                      ),
-                      TextField(
-                          controller: _password,
-                          obscureText: true,
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.done:
+                    return Column(
+                      children: [
+                        TextField(
+                          controller: _email,
                           autocorrect: false,
                           enableSuggestions: false,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
-                            hintText: "Enter your password",
-                          )),
-                      TextButton(
-                        onPressed: () async {
-              
-                          final email = _email.text;
-                          final password = _password.text;
-              
+                              hintText: "Enter your email"),
+                        ),
+                        TextField(
+                            controller: _password,
+                            obscureText: true,
+                            autocorrect: false,
+                            enableSuggestions: false,
+                            decoration: const InputDecoration(
+                              hintText: "Enter your password",
+                            )),
+                        TextButton(
+                          onPressed: () async {
+                            final email = _email.text;
+                            final password = _password.text;
+
                             try {
                               final userCredential = await FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
@@ -79,7 +79,8 @@ class _RegisterViewState extends State<RegisterView> {
                               if (e.code == "weak-password") {
                                 showErrorDialog(
                                     context: context,
-                                    text: "Password is too weak! Password should be at least 6 characters");
+                                    text:
+                                        "Password is too weak! Password should be at least 6 characters");
                               } else if (e.code == "email-already-in-use") {
                                 showErrorDialog(
                                     context: context,
@@ -87,28 +88,30 @@ class _RegisterViewState extends State<RegisterView> {
                                         "The account already exists for that email.");
                               } else if (e.code == "invalid-email") {
                                 showErrorDialog(
-                                    context: context,
-                                    text:
-                                        "Invalid Email");
+                                    context: context, text: "Invalid Email");
                               }
                             } catch (e) {
                               print(e);
                               showErrorDialog(context: context);
                             }
-              
-                        },
-                        child: const Text("Register"),
-                      ),
-                    ],
-                  );
-                default:
-                 return const Column(children: [
-                  CircularProgressIndicator(),
-                  Text("Loading ...")
-                 ]); 
-              }
-            }
-          ),
+                          },
+                          child: const Text("Register"),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  "/login", (route) => false);
+                            },
+                            child: const Text("Already register? Login here")),
+                      ],
+                    );
+                  default:
+                    return const Column(children: [
+                      CircularProgressIndicator(),
+                      Text("Loading ...")
+                    ]);
+                }
+              }),
         ),
       ),
     );
