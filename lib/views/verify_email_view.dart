@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutternotes/constants/routes.dart';
 import 'package:flutternotes/helpers/colors.dart';
 import 'dart:developer' as devtools show log;
 
@@ -25,15 +26,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               onPressed: () async {
                 User? user = FirebaseAuth.instance.currentUser;
                 devtools.log(user.toString());
-                
+
                 final isUserVerified = user?.emailVerified ?? false;
 
-                if(!isUserVerified){
+                if (!isUserVerified) {
                   await user?.sendEmailVerification();
                 }
-                
-                Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
 
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil(loginRoute, (route) => false);
               },
               child: const Text("Send Email Verification"))
         ],
