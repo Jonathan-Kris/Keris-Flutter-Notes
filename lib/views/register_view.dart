@@ -76,6 +76,12 @@ class _RegisterViewState extends State<RegisterView> {
                                   .createUserWithEmailAndPassword(
                                       email: email, password: password);
                               devtools.log(userCredential.toString());
+
+                              // Redirect to Verify Email View
+                              if (context.mounted) {
+                                Navigator.of(context)
+                                    .pushNamed(verifyEmailRoute);
+                              }
                             } on FirebaseAuthException catch (e) {
                               devtools.log(e.toString());
                               if (e.code == "weak-password") {
@@ -91,9 +97,12 @@ class _RegisterViewState extends State<RegisterView> {
                               } else if (e.code == "invalid-email") {
                                 showErrorDialog(
                                     context: context, text: "Invalid Email");
+                              } else {
+                                showErrorDialog(
+                                    context: context,
+                                    text: "Error: ${e.toString()}");
                               }
                             } catch (e) {
-                              devtools.log(e.toString());
                               showErrorDialog(context: context);
                             }
                           },

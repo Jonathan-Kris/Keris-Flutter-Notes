@@ -80,19 +80,22 @@ class LoginViewState extends State<LoginView> {
                               final isUserVerified =
                                   userCredential.user?.emailVerified ?? false;
 
-                              //showSuccessDialog(context: context, text: "Welcome ${email}");
-                              if (isUserVerified) {
-                                // Main UI go here
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    notesRoute, (route) => false);
-                              } else {
-                                Navigator.of(context)
-                                    .pushNamed(verifyEmailRoute);
+                              if (context.mounted) {
+                                if (isUserVerified) {
+                                  // Main UI go here
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      notesRoute, (route) => false);
+                                } else {
+                                  Navigator.of(context)
+                                      .pushNamed(verifyEmailRoute);
+                                }
                               }
                             } on FirebaseAuthException catch (e) {
                               devtools.log(e.toString());
                               if (e.code == "user-not-found") {
-                                showErrorDialog(
+                                // showErrorDialog(
+                                //     context: context, text: "User not found!");
+                                showErrorDialogVandad(
                                     context: context, text: "User not found!");
                               } else if (e.code == "wrong-password") {
                                 showErrorDialog(
@@ -103,10 +106,15 @@ class LoginViewState extends State<LoginView> {
                                     context: context,
                                     text:
                                         "This account has been temporarily disabled due to many failed login attempts. Try again later");
+                              } else {
+                                showErrorDialog(
+                                    context: context,
+                                    text: "Error: ${e.toString()}");
                               }
                             } catch (e) {
-                              devtools.log(e.toString());
-                              showErrorDialog(context: context);
+                              showErrorDialog(
+                                  context: context,
+                                  text: "Error : ${e.toString()}");
                             }
                           },
                           child: const Text("Login"),

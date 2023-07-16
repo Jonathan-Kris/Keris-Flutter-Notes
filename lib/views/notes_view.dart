@@ -4,6 +4,8 @@ import 'package:flutternotes/constants/routes.dart';
 import 'package:flutternotes/helpers/colors.dart';
 import 'dart:developer' as devtools show log;
 
+import 'package:flutternotes/widgets/custom_dialog.dart';
+
 // This is the type used by the popup menu below.
 enum MenuAction { logout, itemTwo, itemThree }
 
@@ -35,8 +37,12 @@ class _NotesViewState extends State<NotesView> {
                   // If user choose to logout, process to Firebase
                   if (flagLogout) {
                     FirebaseAuth.instance.signOut();
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil(homeRoute, (route) => false);
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        homeRoute,
+                        (route) => false,
+                      );
+                    }
                   }
                 }
 
@@ -68,27 +74,4 @@ class _NotesViewState extends State<NotesView> {
           child: Column(children: [Text("Main view is here")]),
         )));
   }
-}
-
-Future<bool> showLogoutDialog(BuildContext context) {
-  return showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Sign Out"),
-          content: const Text("Are you sure you want to log out?"),
-          actions: [
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text("Cancel")),
-            TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text("Log out"))
-          ],
-        );
-      }).then((value) => value ?? false);
 }
