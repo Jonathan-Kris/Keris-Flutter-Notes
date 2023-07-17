@@ -77,6 +77,10 @@ class _RegisterViewState extends State<RegisterView> {
                                       email: email, password: password);
                               devtools.log(userCredential.toString());
 
+                              // Send Email automatically after registering
+                              final user = FirebaseAuth.instance.currentUser;
+                              await user?.sendEmailVerification();
+
                               // Redirect to Verify Email View
                               if (context.mounted) {
                                 Navigator.of(context)
