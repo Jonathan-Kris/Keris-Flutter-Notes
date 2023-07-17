@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutternotes/constants/routes.dart';
 import 'package:flutternotes/helpers/colors.dart';
-import 'dart:developer' as devtools show log;
+
+import 'package:flutternotes/services/auth/auth_service.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -31,13 +31,12 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           ),
           TextButton(
               onPressed: () async {
-                User? user = FirebaseAuth.instance.currentUser;
-                devtools.log(user.toString());
+                final user = AuthService.firebase().currentUser;
 
-                final isUserVerified = user?.emailVerified ?? false;
+                final isUserVerified = user?.isEmailVerified ?? false;
 
                 if (!isUserVerified) {
-                  await user?.sendEmailVerification();
+                  await AuthService.firebase().sendEmailNotification();
                 }
 
                 if (context.mounted) {
@@ -49,9 +48,13 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               },
               child: const Text("Send Email Verification")),
           TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(registerRoute, (route) => false);
+              onPressed: () async {
+                await AuthService.firebase().logout();
+                await AuthService.firebase().sendEmailNotification();
+                if (context.mounted) {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(registerRoute, (route) => false);
+                }
               },
               child: const Text("Restart")),
         ],

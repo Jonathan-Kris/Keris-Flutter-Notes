@@ -1,11 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutternotes/constants/routes.dart';
-import 'package:flutternotes/firebase_options.dart';
 import 'package:flutternotes/helpers/colors.dart';
+import 'package:flutternotes/services/auth/auth_exceptions.dart';
+import 'package:flutternotes/services/auth/auth_service.dart';
 import 'package:flutternotes/widgets/custom_dialog.dart';
-import 'dart:developer' as devtools show log;
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -42,9 +40,7 @@ class _RegisterViewState extends State<RegisterView> {
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: FutureBuilder(
-              future: Firebase.initializeApp(
-                options: DefaultFirebaseOptions.currentPlatform,
-              ),
+              future: AuthService.firebase().initialize(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.done:
@@ -72,42 +68,35 @@ class _RegisterViewState extends State<RegisterView> {
                             final password = _password.text;
 
                             try {
-                              final userCredential = await FirebaseAuth.instance
-                                  .createUserWithEmailAndPassword(
-                                      email: email, password: password);
-                              devtools.log(userCredential.toString());
+                              await AuthService.firebase()
+                                  .createUser(email: email, password: password);
 
                               // Send Email automatically after registering
-                              final user = FirebaseAuth.instance.currentUser;
-                              await user?.sendEmailVerification();
+                              await AuthService.firebase()
+                                  .sendEmailNotification();
 
                               // Redirect to Verify Email View
                               if (context.mounted) {
                                 Navigator.of(context)
                                     .pushNamed(verifyEmailRoute);
                               }
-                            } on FirebaseAuthException catch (e) {
-                              devtools.log(e.toString());
-                              if (e.code == "weak-password") {
-                                showErrorDialog(
-                                    context: context,
-                                    text:
-                                        "Password is too weak! Password should be at least 6 characters");
-                              } else if (e.code == "email-already-in-use") {
-                                showErrorDialog(
-                                    context: context,
-                                    text:
-                                        "The account already exists for that email.");
-                              } else if (e.code == "invalid-email") {
-                                showErrorDialog(
-                                    context: context, text: "Invalid Email");
-                              } else {
-                                showErrorDialog(
-                                    context: context,
-                                    text: "Error: ${e.toString()}");
-                              }
-                            } catch (e) {
-                              showErrorDialog(context: context);
+                            } on WeakPasswordAuthException {
+                              await showErrorDialog(
+                                  context: context,
+                                  text:
+                                      "Password is too weak! Password should be at least 6 characters");
+                            } on EmailAlreadyInUsedAuthException {
+                              showErrorDialog(
+                                  context: context,
+                                  text:
+                                      "The account already exists for that email.");
+                            } on InvalidEmailAuthException {
+                              showErrorDialog(
+                                  context: context, text: "Invalid Email");
+                            } on GenericAuthException catch (e) {
+                              showErrorDialog(
+                                  context: context,
+                                  text: "Error: ${e.toString()}");
                             }
                           },
                           child: const Text("Register"),

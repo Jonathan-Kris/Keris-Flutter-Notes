@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutternotes/firebase_options.dart';
+import 'package:flutternotes/services/auth/auth_service.dart';
+import 'package:flutternotes/services/auth/auth_user.dart';
 import 'package:flutternotes/views/login_view.dart';
 import 'package:flutternotes/views/notes_view.dart';
 import 'package:flutternotes/views/verify_email_view.dart';
@@ -12,41 +12,35 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: 
-          FutureBuilder(
-            future: Firebase.initializeApp(
-                options: DefaultFirebaseOptions.currentPlatform,
-              ),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: FutureBuilder(
+            future: AuthService.firebase().initialize(),
             builder: (context, snapshot) {
-              switch (snapshot.connectionState){
+              switch (snapshot.connectionState) {
                 case ConnectionState.done:
-                  User? user = FirebaseAuth.instance.currentUser;
-                  final isUserVerified = user?.emailVerified ?? false;
+                  final user = AuthService.firebase().currentUser;
 
-                  if(user != null){
-                    if (isUserVerified) {
+                  if (user != null) {
+                    if (user.isEmailVerified) {
                       // Main UI go here
                       return const NotesView();
                     } else {
-                      //return const LoginView();
                       return const VerifyEmailView();
                     }
                   } else {
                     return const LoginView();
                   }
                 default:
-                 return const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          Text("Loading ...")
-                        ]); 
+                  return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        Text("Loading ...")
+                      ]);
               }
-            }
-          ),
-        ),
-      );
+            }),
+      ),
+    );
   }
 }

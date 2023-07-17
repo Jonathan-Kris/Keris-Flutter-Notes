@@ -1,13 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutternotes/constants/routes.dart';
+import 'package:flutternotes/enums/menu_action.dart';
 import 'package:flutternotes/helpers/colors.dart';
+import 'package:flutternotes/services/auth/auth_service.dart';
 import 'dart:developer' as devtools show log;
 
 import 'package:flutternotes/widgets/custom_dialog.dart';
-
-// This is the type used by the popup menu below.
-enum MenuAction { logout, itemTwo, itemThree }
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -32,11 +30,10 @@ class _NotesViewState extends State<NotesView> {
                 devtools.log(item.toString());
                 if (item.name == "logout") {
                   final flagLogout = await showLogoutDialog(context);
-                  devtools.log(flagLogout.toString());
 
                   // If user choose to logout, process to Firebase
                   if (flagLogout) {
-                    FirebaseAuth.instance.signOut();
+                    AuthService.firebase().logout();
                     if (context.mounted) {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                         homeRoute,
