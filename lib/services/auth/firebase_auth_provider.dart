@@ -77,7 +77,11 @@ class FirebaseAuthProvider extends AuthProvider {
   Future<void> logout() async {
     final user = FirebaseAuth.instance.currentUser;
     try {
-      await FirebaseAuth.instance.signOut();
+      if (user != null) {
+        await FirebaseAuth.instance.signOut();
+      } else {
+        throw UserNotLoggedInAuthException();
+      }
     } on Exception catch (_) {
       throw GenericAuthException();
     }
