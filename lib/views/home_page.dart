@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutternotes/services/auth/auth_service.dart';
-import 'package:flutternotes/services/auth/auth_user.dart';
 import 'package:flutternotes/views/login_view.dart';
 import 'package:flutternotes/views/notes_view.dart';
 import 'package:flutternotes/views/verify_email_view.dart';
