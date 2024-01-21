@@ -1,0 +1,16 @@
+const createUserTable = '''
+  CREATE TABLE IF NOT EXISTS "User" (
+    "ID"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "Email"	INTEGER NOT NULL
+  );
+''';
+
+const createNoteTable = '''
+  CREATE TABLE IF NOT EXISTS "Note" (
+  "ID"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "UserID"	INTEGER NOT NULL,
+  "Content"	TEXT,
+  "IsSyncWithCloud"	INTEGER NOT NULL DEFAULT 0,
+  FOREIGN KEY("UserID") REFERENCES "User"("ID")
+);
+''';
